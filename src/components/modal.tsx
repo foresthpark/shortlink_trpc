@@ -77,7 +77,7 @@ const SlugList = ({ open, setOpen, data }: Props) => {
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-gray-200 bg-white">
-                            {data.map((url) => (
+                            {data?.map((url) => (
                               <tr
                                 key={url.slug}
                                 onClick={() => onClickSlug(url.slug)}
