@@ -1,6 +1,7 @@
 import { Dialog, Transition } from "@headlessui/react";
-import type { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Fragment } from "react";
+import { toast } from "react-toastify";
 import { trpc } from "../utils/trpc";
 
 interface Props {
@@ -10,6 +11,22 @@ interface Props {
 
 const SlugList = ({ open, setOpen }: Props) => {
   const { data, isError, isLoading } = trpc.shortlink.getAll.useQuery();
+
+  const [hostName, setHostName] = useState<string | undefined>();
+
+  const onClickSlug = (slug: string) => {
+    if (hostName) {
+      navigator.clipboard.writeText(`${hostName}/${slug}`);
+    }
+    toast.success("Copied to clipboard");
+    setOpen(false);
+  };
+
+  useEffect(() => {
+    if (typeof window !== undefined) {
+      setHostName(window.location.hostname);
+    }
+  }, []);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -72,7 +89,8 @@ const SlugList = ({ open, setOpen }: Props) => {
                             {data.map((url) => (
                               <tr
                                 key={url.slug}
-                                className="divide-x divide-gray-200"
+                                onClick={() => onClickSlug(url.slug)}
+                                className="cursor-pointer divide-x divide-gray-200 hover:bg-gray-100"
                               >
                                 <td className="whitespace-nowrap py-4 pl-4 pr-4 text-sm font-medium text-gray-900 sm:pl-6">
                                   {url.slug}
