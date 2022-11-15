@@ -1,6 +1,9 @@
 import { publicProcedure } from "./../trpc";
 
-import { createShortLinkSchema } from "@/server/schemas/shortlink.schema";
+import {
+  createShortLinkSchema,
+  getLinkSchema,
+} from "@/server/schemas/shortlink.schema";
 import { router } from "../trpc";
 import randomStringGenerator from "@/utils/randomStringGenerator";
 
@@ -28,5 +31,12 @@ export const shortlinkRouter = router({
     }),
   getAll: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.shortLink.findMany({});
+  }),
+  getLink: publicProcedure.input(getLinkSchema).query(({ ctx, input }) => {
+    return ctx.prisma.shortLink.findFirst({
+      where: {
+        slug: input.slug,
+      },
+    });
   }),
 });

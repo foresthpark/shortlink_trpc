@@ -9,8 +9,7 @@ interface Props {
 }
 
 const SlugList = ({ open, setOpen }: Props) => {
-  const { data, isError, refetch, isLoading } =
-    trpc.shortlink.getAll.useQuery();
+  const { data, isError, isLoading } = trpc.shortlink.getAll.useQuery();
 
   if (isLoading) {
     return <div>Loading...</div>;
