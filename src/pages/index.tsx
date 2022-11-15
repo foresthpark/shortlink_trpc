@@ -20,9 +20,8 @@ const Home: NextPage = () => {
   const isDarkTheme = useThemeDetector();
   const [open, setOpen] = useState(false);
 
-  const hello = trpc.example.hello.useQuery({ text: "from tRPC" });
   const { mutate } = trpc.shortlink.createLink.useMutation({
-    onSuccess: async (data: any) => {
+    onSuccess: async (data) => {
       await navigator.clipboard.writeText(`https://u.forestp.dev/${data.slug}`);
 
       toast.success(
@@ -47,13 +46,7 @@ const Home: NextPage = () => {
     },
   });
 
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-    reset,
-  } = useForm<createShortlinkInput>();
+  const { register, handleSubmit, reset } = useForm<createShortlinkInput>();
 
   const onSubmit = async (data: createShortlinkInput) => {
     mutate({ url: data.url });

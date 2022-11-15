@@ -1,10 +1,14 @@
-import React from "react";
-import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { CheckIcon } from "@heroicons/react/outline";
+import type { Dispatch, SetStateAction } from "react";
+import { Fragment } from "react";
 import { trpc } from "../utils/trpc";
 
-const SlugList = ({ open, setOpen }: any) => {
+interface Props {
+  open: boolean;
+  setOpen: Dispatch<SetStateAction<boolean>>;
+}
+
+const SlugList = ({ open, setOpen }: Props) => {
   const { data, isError, refetch, isLoading } =
     trpc.shortlink.getAll.useQuery();
 
