@@ -1,0 +1,28 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
+}
+
+datasource db {
+  provider             = "mysql"
+  url                  = env("DATABASE_URL")
+  referentialIntegrity = "prisma"
+}
+
+model Example {
+  id String @id @default(cuid())
+}
+
+model ShortLink {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  url String @unique @db.VarChar(256)
+
+  slug String @unique
+
+  @@index([url])
+}
