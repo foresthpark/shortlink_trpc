@@ -19,6 +19,7 @@ import { useState } from "react";
 const Home: NextPage = () => {
   const isDarkTheme = useThemeDetector();
   const [open, setOpen] = useState(false);
+  const { data, isLoading } = trpc.shortlink.getAll.useQuery();
 
   const { mutate } = trpc.shortlink.createLink.useMutation({
     onSuccess: async (data) => {
@@ -105,11 +106,12 @@ const Home: NextPage = () => {
           type="button"
           className="inline-flex items-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
           onClick={() => setOpen(true)}
+          disabled={isLoading}
         >
-          Click to see list of all shortlinks
+          {isLoading ? "Loading..." : "View all Shortlinks"}
         </button>
       </div>
-      <SlugList open={open} setOpen={setOpen} />
+      {data && <SlugList open={open} setOpen={setOpen} data={data} />}
     </div>
   );
 };

@@ -1,17 +1,16 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { Fragment } from "react";
+import type { ShortLink } from "@prisma/client";
+import type { Dispatch, SetStateAction } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { trpc } from "../utils/trpc";
 
 interface Props {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
+  data: ShortLink[] | undefined;
 }
 
-const SlugList = ({ open, setOpen }: Props) => {
-  const { data, isError, isLoading } = trpc.shortlink.getAll.useQuery();
-
+const SlugList = ({ open, setOpen, data }: Props) => {
   const [hostName, setHostName] = useState<string | undefined>();
 
   const onClickSlug = (slug: string) => {
@@ -27,14 +26,6 @@ const SlugList = ({ open, setOpen }: Props) => {
       setHostName(window.location.hostname);
     }
   }, []);
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (isError) {
-    return <div>Error...Try again</div>;
-  }
 
   return (
     <Transition.Root show={open} as={Fragment}>
